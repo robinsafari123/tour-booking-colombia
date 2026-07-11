@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
     try {
       const supabase = getSupabase();
       // Confirm all bookings in this checkout
-      await Promise.all(ids.map((id) =>
+      const updateResults = await Promise.all(ids.map((id) =>
         supabase.from('bookings').update({
           payment_status: 'confirmed',
           payment_gateway: 'wompi',
@@ -115,13 +115,18 @@ export async function GET(request: NextRequest) {
           wompi_reference: reference,
         }).eq('id', id)
       ));
+      updateResults.forEach((res, i) => {
+        if (res.error) console.error(`Wompi callback: booking ${ids[i]} update failed`, res.error);
+      });
 
       // Send confirmation email for the primary booking
-      const { data: booking } = await supabase
+      const { data: booking, error } = await supabase
         .from('bookings')
         .select('customer_name, email, tour_name, date, num_people, total_cop, email_sent')
         .eq('id', primaryId)
         .single();
+
+      if (error) console.error('Wompi callback: fetching primary booking failed', error);
 
       if (booking && !booking.email_sent) {
         await sendBookingConfirmation({

@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       }
 
       const supabase = getSupabase();
-      const { data: booking } = await supabase
+      const { data: booking, error } = await supabase
         .from('bookings')
         .update({
           payment_status: 'confirmed',
@@ -57,6 +57,11 @@ export async function POST(request: NextRequest) {
         .eq('wompi_reference', reference)
         .select('customer_name, email, tour_name, date, num_people, total_cop, email_sent, id')
         .single();
+
+      if (error) {
+        console.error('Wompi events webhook: booking update failed', error);
+        return NextResponse.json({ error: 'Booking update failed' }, { status: 500 });
+      }
 
       if (booking && !booking.email_sent) {
         await sendBookingConfirmation({

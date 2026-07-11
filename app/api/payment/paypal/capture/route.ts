@@ -56,19 +56,24 @@ export async function GET(request: NextRequest) {
         result.purchaseUnits?.[0]?.payments?.captures?.[0]?.id ?? token;
 
       const supabase = getSupabase();
-      await Promise.all(ids.map((id) =>
+      const updateResults = await Promise.all(ids.map((id) =>
         supabase.from('bookings').update({
           payment_status: 'confirmed',
           payment_gateway: 'paypal',
           payment_reference: captureId,
         }).eq('id', id)
       ));
+      updateResults.forEach((res, i) => {
+        if (res.error) console.error(`PayPal capture: booking ${ids[i]} update failed`, res.error);
+      });
 
-      const { data: booking } = await supabase
+      const { data: booking, error } = await supabase
         .from('bookings')
         .select('customer_name, email, tour_name, date, num_people, total_cop, email_sent')
         .eq('id', primaryId)
         .single();
+
+      if (error) console.error('PayPal capture: fetching primary booking failed', error);
 
       if (booking && !booking.email_sent) {
         await sendBookingConfirmation({

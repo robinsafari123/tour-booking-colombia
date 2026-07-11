@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     // state_pol: 4 = Approved, 6 = Declined, 5 = Expired, 7 = Pending
     if (transactionState === '4' && referenceCode) {
       const supabase = getSupabase();
-      const { data: booking } = await supabase
+      const { data: booking, error } = await supabase
         .from('bookings')
         .update({
           payment_status: 'confirmed',
@@ -68,6 +68,11 @@ export async function POST(request: NextRequest) {
         .eq('payment_reference', referenceCode)
         .select('customer_name, email, tour_name, date, num_people, total_cop, email_sent, id')
         .single();
+
+      if (error) {
+        console.error('PayU notify: booking update failed', error);
+        return new NextResponse('Booking update failed', { status: 500 });
+      }
 
       if (booking && !booking.email_sent) {
         await sendBookingConfirmation({
