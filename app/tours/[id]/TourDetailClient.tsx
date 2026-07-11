@@ -31,7 +31,7 @@ export default function TourDetailClient({ tour }: { tour: DbTour }) {
   const payuFormRef = useRef<HTMLFormElement>(null);
   const [payuParams, setPayuParams] = useState<Record<string, string> | null>(null);
   const [payuAction, setPayuAction] = useState('');
-  const [form, setForm] = useState({ name: '', email: '', phone: '', guests: '4', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', phone: '', guests: '1', message: '' });
   const [enabledGateways, setEnabledGateways] = useState<Record<string, boolean>>({
     wompi: true, payu: true, mercadopago: true, paypal: true,
   });
@@ -332,7 +332,7 @@ export default function TourDetailClient({ tour }: { tour: DbTour }) {
                           {lang === 'es' ? 'Número de personas' : 'Number of guests'} *
                         </label>
                         <input
-                          name='guests' type='number' min={4} max={10} value={form.guests} onChange={handleChange} required
+                          name='guests' type='number' min={1} max={10} value={form.guests} onChange={handleChange} required
                           className='w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400'
                         />
 

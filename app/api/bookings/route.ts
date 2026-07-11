@@ -21,8 +21,8 @@ export async function POST(request: NextRequest) {
     if (!customer_name || !email || !phone || !tour_name || !date || !num_people || !total_cop) {
       return NextResponse.json({ error: 'Faltan campos requeridos' }, { status: 400 });
     }
-    if (Number(num_people) < 4) {
-      return NextResponse.json({ error: 'El número mínimo de personas por reserva es 4' }, { status: 400 });
+    if (Number(num_people) < 1) {
+      return NextResponse.json({ error: 'El número mínimo de personas por reserva es 1' }, { status: 400 });
     }
 
     const supabase = getSupabase();
@@ -63,8 +63,8 @@ export async function PATCH(request: NextRequest) {
     if (!bookingId) {
       return NextResponse.json({ error: 'bookingId requerido' }, { status: 400 });
     }
-    if (num_people !== undefined && Number(num_people) < 4) {
-      return NextResponse.json({ error: 'El número mínimo de personas por reserva es 4' }, { status: 400 });
+    if (num_people !== undefined && Number(num_people) < 1) {
+      return NextResponse.json({ error: 'El número mínimo de personas por reserva es 1' }, { status: 400 });
     }
 
     const supabase = getSupabase();

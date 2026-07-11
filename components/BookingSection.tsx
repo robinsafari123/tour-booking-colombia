@@ -81,7 +81,7 @@ export default function BookingSection() {
     email: '',
     phone: '',
     tourIndex: '',
-    guests: '4',
+    guests: '1',
     message: '',
   });
 
@@ -520,7 +520,7 @@ export default function BookingSection() {
                     </Label>
                     <Input
                       id='guests' name='guests' type='number'
-                      min='4' max='10' placeholder='4'
+                      min='1' max='10' placeholder='2'
                       required
                       value={form.guests}
                       onChange={handleChange}

@@ -46,7 +46,7 @@ create table if not exists bookings (
   email                 text not null,
   phone                 text not null,
   date                  date not null,
-  num_people            integer not null check (num_people >= 4),
+  num_people            integer not null check (num_people >= 1),
   notes                 text,
   payment_status        text not null default 'pending'
                           check (payment_status in ('pending', 'confirmed', 'cancelled')),
