@@ -21,8 +21,10 @@ export default function CalendarPicker({ value, onChange, allowedDays }: Calenda
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const disabled: Matcher[] = [{ before: today }];
+  const disabled: Matcher[] = [{ before: tomorrow }];
   if (allowedDays && allowedDays.length > 0) {
     const allDays = [0, 1, 2, 3, 4, 5, 6];
     const disabledWeekdays = allDays.filter(d => !allowedDays.includes(d));
